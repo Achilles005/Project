@@ -8,27 +8,27 @@ var wide=0.0;
 var reslt=[];
 async function callStackML(){
     await stackml.init({'accessKeyId': '10497ebc3dd4bc496108acdf782f1e70'});
-               
+
 async function callStackML1() {
     //provide the access key
-   
+
     const model = await stackml.faceLandmark(callbackLoad);
 
     // make prediction with the image
     model.detect(document.getElementById('image'), callbackPredict);
-    
+
     function callbackLoad() {
         console.log('callback after face landmark detection model is loaded!');
     }
-    
+
     // callback after prediction
     function callbackPredict(err, results) {
         xaxis=results.outputs[0].detection.box.x;
         yaxis=results.outputs[0].detection.box.y;
         high=results.outputs[0].detection.box.height;
         wide=results.outputs[0].detection.box.width;
-        
-    
+
+
         // draw output keypoints in the image
         model.draw(document.getElementById('myCanvas'), document.getElementById('image'), results);
 }
@@ -48,37 +48,36 @@ function callbackPredict(err, results) {
    // console.log(results);
     reslt=results.outputs[0].expressions;
     console.log(reslt);
-        
-for(let i =0; i<=reslt.length;i++){
-    for(let j=i+1;j<reslt.length;j++){
-    if(reslt[j].probability>=reslt[i].probability){
-        exp=reslt[i].expression;
-    }
+var maximum=reslt[0].probability;
+for(var c=0;c<reslt.length;c++){
+  if(reslt[c].probability > maximum){
+    maximum=reslt[c].probability;
+    exp=reslt[c].expression;
+  }
 }
-}
-function loadJSON(file, callback) {   
+function loadJSON(file, callback) {
 
     var xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
-    xobj.open('GET', file, true); 
+    xobj.open('GET', file, true);
     xobj.onreadystatechange = function () {
           if (xobj.readyState == 4 && xobj.status == "200") {
-            
+
             callback(xobj.responseText);
           }
     };
-    xobj.send(null);  
+    xobj.send(null);
  }
 /*
  function load() {
-    
+
     loadJSON("https://unpkg.com/emoji.json@12.1.0/emoji.json", function(response) {
-  
+
         var actual_JSON = JSON.parse(response);
         console.log(actual_JSON);
     });
-    
-    
+
+
 }load();
 */
 
@@ -93,12 +92,12 @@ var url1='emoji/';
         for (let i=0;i<store.length;i++){
             if(store[i].name==emojiName){
                 emoji=store[i].codes;
-              
+
                emo=url1.concat(emoji);
-              
-              
+
+
                emourl=emo.concat(p);
-              
+
                break;
             }
         }
@@ -136,7 +135,7 @@ console.log(exp);
     model.draw(document.getElementById('myCanvas'), document.getElementById('image'),results);
     //reslt=results;
     //console.log(reslt.length);
-    
+
 
 }
 }
@@ -151,11 +150,10 @@ function placing(){
     var img = document.getElementById("image");
     var img2 = new Image();
     img2.src = emourl;
-      
-    
-    
-      $("#button1").click(function(){   
+
+
+
+      $("#button1").click(function(){
       ctx.drawImage(img2,xaxis,yaxis,wide,high);
     });
   };
-  
